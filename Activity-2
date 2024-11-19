@@ -1,0 +1,172 @@
+using System;
+using System.Windows.Forms;
+
+namespace PizzaOrderFormApp
+{
+    static class Program
+    {
+        [STAThread]
+        static void Main()
+        {
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new PizzaOrderForm());
+        }
+    }
+
+    public class PizzaOrderForm : Form
+    {
+        private ComboBox comboBoxSize;
+        private CheckBox checkBoxCheese, checkBoxPepperoni, checkBoxMushrooms;
+        private RadioButton radioButtonThin, radioButtonThick;
+        private Button buttonPlaceOrder;
+        private Label labelOrderSummary;
+
+        public PizzaOrderForm()
+        {
+            // Form setup
+            this.Text = "Pizza Order Form";
+            this.Width = 400;
+            this.Height = 450;
+
+            // Pizza Size Label
+            Label labelSizePrompt = new Label
+            {
+                Text = "Pizza Size:",
+                Top = 20,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(labelSizePrompt);
+
+            // Pizza Size ComboBox
+            comboBoxSize = new ComboBox
+            {
+                Top = 50,
+                Left = 20,
+                Width = 150
+            };
+            comboBoxSize.Items.AddRange(new string[] { "Small", "Medium", "Large" });
+            comboBoxSize.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.Controls.Add(comboBoxSize);
+
+            // Toppings Label
+            Label labelToppingsPrompt = new Label
+            {
+                Text = "Toppings:",
+                Top = 90,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(labelToppingsPrompt);
+
+            // Toppings CheckBoxes
+            checkBoxCheese = new CheckBox
+            {
+                Text = "Cheese",
+                Top = 120,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(checkBoxCheese);
+
+            checkBoxPepperoni = new CheckBox
+            {
+                Text = "Pepperoni",
+                Top = 150,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(checkBoxPepperoni);
+
+            checkBoxMushrooms = new CheckBox
+            {
+                Text = "Mushrooms",
+                Top = 180,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(checkBoxMushrooms);
+
+            // Crust Type Label
+            Label labelCrustPrompt = new Label
+            {
+                Text = "Crust Type:",
+                Top = 220,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(labelCrustPrompt);
+
+            // Crust Type RadioButtons
+            radioButtonThin = new RadioButton
+            {
+                Text = "Thin Crust",
+                Top = 250,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(radioButtonThin);
+
+            radioButtonThick = new RadioButton
+            {
+                Text = "Thick Crust",
+                Top = 280,
+                Left = 20,
+                AutoSize = true
+            };
+            this.Controls.Add(radioButtonThick);
+
+            // Place Order Button
+            buttonPlaceOrder = new Button
+            {
+                Text = "Place Order",
+                Top = 320,
+                Left = 20,
+                Width = 100
+            };
+            buttonPlaceOrder.Click += ButtonPlaceOrder_Click;
+            this.Controls.Add(buttonPlaceOrder);
+
+            // Order Summary Label
+            labelOrderSummary = new Label
+            {
+                Top = 360,
+                Left = 20,
+                Width = 340,
+                Height = 60,
+                BorderStyle = BorderStyle.FixedSingle,
+                AutoSize = false
+            };
+            this.Controls.Add(labelOrderSummary);
+        }
+
+        private void ButtonPlaceOrder_Click(object sender, EventArgs e)
+        {
+            // Step 1: Retrieve pizza size
+            string pizzaSize = comboBoxSize.SelectedItem?.ToString() ?? "No size selected";
+
+            // Step 2: Gather selected toppings
+            string toppings = "";
+            if (checkBoxCheese.Checked) toppings += "Cheese, ";
+            if (checkBoxPepperoni.Checked) toppings += "Pepperoni, ";
+            if (checkBoxMushrooms.Checked) toppings += "Mushrooms, ";
+            toppings = string.IsNullOrWhiteSpace(toppings) ? "No toppings" : toppings.TrimEnd(',', ' ');
+
+            // Step 3: Determine crust type
+            string crustType;
+            if (radioButtonThin.Checked)
+                crustType = "Thin Crust";
+            else if (radioButtonThick.Checked)
+                crustType = "Thick Crust";
+            else
+                crustType = "No crust selected";
+
+            // Step 4: Generate order summary
+            labelOrderSummary.Text = $"Order Summary:\n" +
+                                     $"- Pizza Size: {pizzaSize}\n" +
+                                     $"- Toppings: {toppings}\n" +
+                                     $"- Crust Type: {crustType}";
+        }
+    }
+}
